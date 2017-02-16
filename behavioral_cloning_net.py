@@ -14,7 +14,6 @@ from keras.models import load_model
 from keras import backend as K
 
 
-
 class BehavioralCloningNet(object):
 
     FILE_PATH = './store/model.h5'
@@ -33,6 +32,10 @@ class BehavioralCloningNet(object):
 
         model = Sequential()
 
+        # Crop the image 
+        model.add(Cropping2D(cropping=((50,20), (0,0)), input_shape=(160,320,3)))
+
+        # Normalize the data
         model.add(Lambda(lambda x: x / 127.5 - 1.0, input_shape=(64, 64, 3)))
 
         # starts with five convolutional and maxpooling layers
