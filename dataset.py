@@ -78,7 +78,7 @@ class Dataset(object):
 
         image = crop(image, top_crop_percent, bottom_crop_percent)
 
-        image, steering_angle = random_flip(image, steering_angle)
+        image, steering_angle = flip(image, steering_angle)
 
         image = random_gamma(image)
 
@@ -105,3 +105,22 @@ class Dataset(object):
         bottom = image.shape[0] - int(np.ceil(image.shape[0] * bottom_percent))
 
         return image[top:bottom, :]
+
+    def flip(self, image, steering_angle, flipping_prob=0.5):
+        head = bernoulli.rvs(flipping_prob)
+        if head:
+            return np.fliplr(image), -1 * steering_angle
+        else:
+            return image, steering_angle
+
+    def random_gamma(self, image):
+        gamma = np.random.uniform(0.4, 1.5)
+        inv_gamma = 1.0 / gamma
+        table = np.array([((i / 255.0) ** inv_gamma) * 255
+                          for i in np.arange(0, 256)]).astype("uint8")
+
+        # apply gamma correction using the lookup table
+        return cv2.LUT(image, table)
+
+    def resize(self, image, new_dim):
+        return scipy.misc.imresize(image, new_dim)
