@@ -85,3 +85,16 @@ class Dataset(object):
         image = resize(image, resize_dim)
 
         return image, steering_angle
+
+    def random_shear(self, image, steering_angle, shear_range=200):
+        rows, cols, ch = image.shape
+        dx = np.random.randint(-shear_range, shear_range + 1)
+        random_point = [cols / 2 + dx, rows / 2]
+        pts1 = np.float32([[0, rows], [cols, rows], [cols / 2, rows / 2]])
+        pts2 = np.float32([[0, rows], [cols, rows], random_point])
+        dsteering = dx / (rows / 2) * 360 / (2 * np.pi * 25.0) / 6.0
+        M = cv2.getAffineTransform(pts1, pts2)
+        image = cv2.warpAffine(image, M, (cols, rows), borderMode=1)
+        steering_angle += dsteering
+
+        return image, steering_angle
