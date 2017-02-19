@@ -13,28 +13,30 @@ from keras.utils import np_utils
 from keras.models import load_model
 from keras import backend as K
 
+import dataset
 import errno
 import json
 import os
 
 class BehavioralCloningNet(object):
 
+    FILE_PATH = 'model.h5'
+
     def __init__(self):
         self.model = None
-        number_of_epochs = 8
-        number_of_samples_per_epoch = 20032
-        number_of_validation_samples = 6400
-        learning_rate = 1e-4
-        activation_relu = 'relu'
+        self.number_of_epochs = 8
+        self.number_of_samples_per_epoch = 20032
+        self.number_of_validation_samples = 6400
+        self.learning_rate = 1e-4
+        self.activation_relu = 'relu'
+        self.dataset = Dataset()
+
 
     # Our model is based on NVIDIA's "End to End Learning for Self-Driving Cars" paper
     # Source:  https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf
     def build_model(self):
 
         model = Sequential()
-
-        # Crop the image 
-        model.add(Cropping2D(cropping=((50,20), (0,0)), input_shape=(160,320,3)))
 
         # Normalize the data
         model.add(Lambda(lambda x: x / 127.5 - 1.0, input_shape=(64, 64, 3)))
@@ -111,16 +113,17 @@ class BehavioralCloningNet(object):
     def train(self, dataset):
         print('Start training.')
 
-        train_gen = helper.generate_next_batch()
-        validation_gen = helper.generate_next_batch()
+        train_batch      = self.dataset.next_batch()
+        validation_batch = self.dataset.next_batch()
 
         history = model.fit_generator(
-                train_gen,
-                samples_per_epoch=sef.number_of_samples_per_epoch,
+                train_batch,
+                samples_per_epoch=self.number_of_samples_per_epoch,
                 nb_epoch=self.number_of_epochs,
-                validation_data=validation_gen,
+                validation_data=validation_batch,
                 nb_val_samples=self.number_of_validation_samples,
-                verbose=1)
+                verbose=1
+            )
 
     def save(self, model_name='model.json', weights_name='model.h5'):
         print('Model Saved.')
