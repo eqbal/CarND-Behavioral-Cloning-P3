@@ -98,3 +98,10 @@ class Dataset(object):
         steering_angle += dsteering
 
         return image, steering_angle
+
+    def crop(self, image, top_percent, bottom_percent):
+
+        top = int(np.ceil(image.shape[0] * top_percent))
+        bottom = image.shape[0] - int(np.ceil(image.shape[0] * bottom_percent))
+
+        return image[top:bottom, :]
