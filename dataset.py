@@ -1,5 +1,6 @@
-
 class Dataset(object):
+
+    FILE_PATH = './store/model.h5'
 
     def __init__(self):
         self.X_train = None

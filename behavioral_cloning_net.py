@@ -13,10 +13,11 @@ from keras.utils import np_utils
 from keras.models import load_model
 from keras import backend as K
 
+import errno
+import json
+import os
 
 class BehavioralCloningNet(object):
-
-    FILE_PATH = './store/model.h5'
 
     def __init__(self):
         self.model = None
@@ -61,7 +62,6 @@ class BehavioralCloningNet(object):
 
         model.add(Flatten())
 
-        # Next, five fully connected layers
         model.add(Dense(1164))
         model.add(Activation(self.activation_relu))
 
@@ -114,16 +114,25 @@ class BehavioralCloningNet(object):
         train_gen = helper.generate_next_batch()
         validation_gen = helper.generate_next_batch()
 
-        history = model.fit_generator(train_gen,
-                                      samples_per_epoch=number_of_samples_per_epoch,
-                                      nb_epoch=number_of_epochs,
-                                      validation_data=validation_gen,
-                                      nb_val_samples=number_of_validation_samples,
-                                      verbose=1)
+        history = model.fit_generator(
+                train_gen,
+                samples_per_epoch=sef.number_of_samples_per_epoch,
+                nb_epoch=self.number_of_epochs,
+                validation_data=validation_gen,
+                nb_val_samples=self.number_of_validation_samples,
+                verbose=1)
 
-    def save(self, file_path=FILE_PATH):
+    def save(self, model_name='model.json', weights_name='model.h5'):
         print('Model Saved.')
-        self.model.save(file_path)
+        delete_file(model_name)
+        delete_file(weights_name)
+
+        json_string = model.to_json()
+
+        with open(model_name, 'w') as outfile:
+            json.dump(json_string, outfile)
+
+        model.save_weights(weights_name)
 
     def load(self, file_path=FILE_PATH):
         print('Model Loaded.')
@@ -136,6 +145,14 @@ class BehavioralCloningNet(object):
         result = self.model.predict_classes(image)
 
         return result[0]
+
+    def delete_file(self, file):
+        try:
+            os.remove(file)
+
+        except OSError as error:
+            if error.errno != errno.ENOENT:
+                raise
 
     def evaluate(self, dataset):
         score = self.model.evaluate(dataset.X_test, dataset.Y_test, verbose=0)
