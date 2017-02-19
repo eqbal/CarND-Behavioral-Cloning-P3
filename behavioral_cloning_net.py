@@ -128,21 +128,13 @@ class BehavioralCloningNet(object):
 
         self.history = history
 
-    def save(self, model_name='model.json', weights_name='model.h5'):
+    def save(self):
+        self.model.save(self.FILE_PATH)
         print('Model Saved.')
-        self.delete_file(model_name)
-        self.delete_file(weights_name)
 
-        json_string = self.model.to_json()
-
-        with open(model_name, 'w') as outfile:
-            json.dump(json_string, outfile)
-
-        self.model.save_weights(weights_name)
-
-    def load(self, file_path=FILE_PATH):
+    def load(self):
         print('Model Loaded.')
-        self.model = load_model(file_path)
+        self.model = load_model(self.FILE_PATH)
 
     def predict(self, image):
         image = image.astype('float32')
@@ -151,14 +143,6 @@ class BehavioralCloningNet(object):
         result = self.model.predict_classes(image)
 
         return result[0]
-
-    def delete_file(self, file):
-        try:
-            os.remove(file)
-
-        except OSError as error:
-            if error.errno != errno.ENOENT:
-                raise
 
     def evaluate(self, dataset):
         score = self.model.evaluate(dataset.X_test, dataset.Y_test, verbose=0)
