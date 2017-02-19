@@ -25,7 +25,7 @@ class BehavioralCloningNet(object):
 
     def __init__(self):
         self.model = None
-        self.number_of_epochs = 8
+        self.number_of_epochs = 6
         self.number_of_samples_per_epoch = 20032
         self.number_of_validation_samples = 6400
         self.learning_rate = 1e-4
