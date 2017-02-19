@@ -74,15 +74,15 @@ class Dataset(object):
         head = bernoulli.rvs(do_shear_prob)
 
         if head == 1:
-            image, steering_angle = random_shear(image, steering_angle)
+            image, steering_angle = self.random_shear(image, steering_angle)
 
-        image = crop(image, top_crop_percent, bottom_crop_percent)
+        image = self.crop(image, top_crop_percent, bottom_crop_percent)
 
-        image, steering_angle = flip(image, steering_angle)
+        image, steering_angle = self.flip(image, steering_angle)
 
-        image = random_gamma(image)
+        image = self.random_gamma(image)
 
-        image = resize(image, resize_dim)
+        image = self.resize(image, resize_dim)
 
         return image, steering_angle
 
