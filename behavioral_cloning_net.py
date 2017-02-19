@@ -164,15 +164,3 @@ class BehavioralCloningNet(object):
         score = self.model.evaluate(dataset.X_test, dataset.Y_test, verbose=0)
         print("%s: %.2f%%" % (self.model.metrics_names[1], score[1] * 100))
 
-if __name__ == '__main__':
-    dataset = Dataset()
-    dataset.read()
-
-    model = Model()
-    model.build_model(dataset)
-    model.train(dataset, nb_epoch=10)
-    model.save()
-
-    model = Model()
-    model.load()
-    model.evaluate(dataset)
