@@ -12,8 +12,8 @@ from scipy.stats import bernoulli
 
 class Dataset(object):
 
-    DRIVING_LOG_FILE = './data/data/driving_log.csv'
-    IMG_PATH = '../data/data/IMG/'
+    DRIVING_LOG_FILE = '../data/data/driving_log.csv'
+    IMG_PATH = '../data/data/'
     STEERING_COEFFICIENT = 0.229
 
     def __init__(self):
@@ -24,16 +24,16 @@ class Dataset(object):
         self.Y_valid = None
         self.Y_test  = None
 
-    def generate_next_batch(self, batch_size=64):
+    def next_batch(self, batch_size=64):
         while True:
             X_batch = []
             y_batch = []
-            images = get_next_image_files(batch_size)
+            images = self.get_next_image_files(batch_size)
 
             for img_file, angle in images:
-                raw_image = plt.imread(IMG_PATH + img_file)
+                raw_image = plt.imread(self.IMG_PATH + img_file)
                 raw_angle = angle
-                new_image, new_angle = generate_new_image(raw_image, raw_angle)
+                new_image, new_angle = self.generate_new_image(raw_image, raw_angle)
                 X_batch.append(new_image)
                 y_batch.append(new_angle)
 
@@ -42,7 +42,7 @@ class Dataset(object):
             yield np.array(X_batch), np.array(y_batch)
 
     def get_next_image_files(self, batch_size=64):
-        data        = pd.read_csv(DRIVING_LOG_FILE)
+        data        = pd.read_csv(self.DRIVING_LOG_FILE)
         num_of_img  = len(data)
         rnd_indices = np.random.randint(0, num_of_img, batch_size)
 
@@ -54,7 +54,7 @@ class Dataset(object):
 
             if rnd_image == 0:
                 img = data.iloc[index]['left'].strip()
-                angle = data.iloc[index]['steering'] + STEERING_COEFFICIENT
+                angle = data.iloc[index]['steering'] + self.STEERING_COEFFICIENT
                 image_files_and_angles.append((img, angle))
 
             elif rnd_image == 1:
@@ -63,7 +63,7 @@ class Dataset(object):
                 image_files_and_angles.append((img, angle))
             else:
                 img = data.iloc[index]['right'].strip()
-                angle = data.iloc[index]['steering'] - STEERING_COEFFICIENT
+                angle = data.iloc[index]['steering'] - self.STEERING_COEFFICIENT
                 image_files_and_angles.append((img, angle))
 
         return image_files_and_angles

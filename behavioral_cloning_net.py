@@ -9,11 +9,12 @@ from keras.models import Sequential, Model
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Convolution2D, MaxPooling2D, Lambda
 from keras.optimizers import SGD
+from keras.optimizers import Adam
 from keras.utils import np_utils
 from keras.models import load_model
 from keras import backend as K
 
-import dataset
+from dataset import *
 import errno
 import json
 import os
@@ -110,13 +111,13 @@ class BehavioralCloningNet(object):
         self.datagen = datagen
 
 
-    def train(self, dataset):
+    def train(self):
         print('Start training.')
 
         train_batch      = self.dataset.next_batch()
         validation_batch = self.dataset.next_batch()
 
-        history = model.fit_generator(
+        history = self.model.fit_generator(
                 train_batch,
                 samples_per_epoch=self.number_of_samples_per_epoch,
                 nb_epoch=self.number_of_epochs,
@@ -125,17 +126,19 @@ class BehavioralCloningNet(object):
                 verbose=1
             )
 
+        self.history = history
+
     def save(self, model_name='model.json', weights_name='model.h5'):
         print('Model Saved.')
-        delete_file(model_name)
-        delete_file(weights_name)
+        self.delete_file(model_name)
+        self.delete_file(weights_name)
 
-        json_string = model.to_json()
+        json_string = self.model.to_json()
 
         with open(model_name, 'w') as outfile:
             json.dump(json_string, outfile)
 
-        model.save_weights(weights_name)
+        self.model.save_weights(weights_name)
 
     def load(self, file_path=FILE_PATH):
         print('Model Loaded.')
