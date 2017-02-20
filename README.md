@@ -95,7 +95,7 @@ Our convolutional neural network architecture was inspired by NVIDIA's End to En
 - Second phrase: data from previous layer are flatten. Then dense to 80, 40, 16, 10 and 1. At each dense layer, 50% Dropout is also applied for the first 3 dense layer to avoid overfitting. With recommend from other students, L2 weight regularization is also applied in every convolution and dense layer to produce a smoother driving performance. After many trial and error, 0.001 produce best peformance for this model.
 
 - For optimizer, Adam optimizer is used. I started with 0.001 training rate but 0.0001 seems to produce a smoother ride. Therefore, I kept 0.0001 learning rate.
-
+```
 ____________________________________________________________________________________________________
 Layer (type)                     Output Shape          Param #     Connected to                     
 ====================================================================================================
@@ -154,6 +154,7 @@ dense_5 (Dense)                  (None, 1)             11          activation_9[
 Total params: 2,116,983
 Trainable params: 2,116,983
 Non-trainable params: 0
+```
 
 ### Dependencies
 
