@@ -63,3 +63,27 @@ The main problem lies in the skew and bias of the data set. Shown below is a his
 Without accounting for this bias towards zero, the car leaves the track quickly. One way to counteract this problem is to  purposely let the car drift  towards the side of the road and to start recovery in the very last moment. 
 
 However, the correct large steering angles are not easy to generate this way, because even then most of the time the car drives straight, with the exception of the short moment when the driver avoids a crash or the car going off the road. 
+
+### Data Capturing
+
+During the training, the simulator captures data with a frequency of 10hz. Also, at a given time step it recorded three images taken from left, center, and right cameras. The following figure shows an example I have collected during the training time.
+
+Left| Center | Right
+----|--------|-------
+![left](./assets/left.png) | ![center](./assets/center.png) | ![right](./assets/right.png)
+
+The dataset consists of 24108 images (8036 images per camera angle). The training track contains a lot of shallow turns and straight road segments. Hence, the majority of the recorded steering angles are zeros. Therefore, preprocessing images and respective steering angles are necessary in order to generalize the training model for unseen tracks such as our validation track.
+
+
+### Dependencies
+
+This project requires **Python 3.5** and the following Python libraries installed:
+
+- [Keras](https://keras.io/)
+- [Pandas](http://pandas.pydata.org/)
+- [OpenCV](http://opencv.org/)
+- [Matplotlib](http://matplotlib.org/) (Optional)
+- [Jupyter](http://jupyter.org/) (Optional)
+- [NumPy](http://www.numpy.org/)
+- [SciPy](https://www.scipy.org/)
+- [TensorFlow](http://tensorflow.org)
