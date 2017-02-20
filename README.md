@@ -3,7 +3,15 @@
 Overview
 ---
 
-The objective of this project is to clone human driving behavior using a Deep Neural Network. In order to achieve this, we are going to use a simple Car Simulator. During the training phase, we navigate our car inside the simulator using the keyboard. While we navigating the car the simulator records training images and respective steering angles. Then we use those recorded data to train our neural network. 
+In this project for the Udacity Self-Driving Car Nanodegree a deep CNN  is developed that can steer a car in a simulator provided by Udacity. The CNN drives the car autonomously around a track. The network is trained on images from a video stream that was recorded while a human was steering the car. The CNN thus clones the human driving behavior.
+
+The steps of this project are the following:
+
+* Use the simulator to collect data of good driving behavior
+* Build, a convolution neural network in Keras that predicts steering angles from images
+* Train and validate the model with a training and validation set
+* Test that the model successfully drives around track one without leaving the road
+* Summarize the results with a written report
 
 Data was collected by me while driving around the track 1 in simulator. I used a ps4 controller to drive around the track. I then used image augmentation to generate multiple training samples that represented driving under different driving conditions.
 
@@ -12,6 +20,8 @@ You can find most of the image effect (image augmentation in `dataset.py` file).
 Training | Validation
 ------------|---------------
 ![training_img](./assets/track_one.gif) | ![validation_img](./assets/track_two.gif)
+
+
 
 Creating a Great Writeup
 ---
