@@ -57,7 +57,7 @@ The simulated car is equipped with three cameras, one to the left, one in the ce
 The main problem lies in the skew and bias of the data set. Shown below is a histogram of the steering angles recorded while driving in the middle of the road for a few laps. This is also the data used for training. The left-right skew is less problematic and can be eliminated by flipping images and steering angles simultaneously. However, even after balancing left and right angles most of the time the steering angle during normal driving is small or zero and thus introduces a bias towards driving straight. The most important events however are those when the car needs to turn sharply. 
 
 <p align="center">
-  ![Recorded Steering Angel](./assets/raw_steering_angles.png)
+ <img src="./assets/raw_steering_angles.png" width="550">
 </p>
 
 Without accounting for this bias towards zero, the car leaves the track quickly. One way to counteract this problem is to  purposely let the car drift  towards the side of the road and to start recovery in the very last moment. 
