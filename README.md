@@ -74,6 +74,28 @@ Left| Center | Right
 
 The dataset consists of 24108 images (8036 images per camera angle). The training track contains a lot of shallow turns and straight road segments. Hence, the majority of the recorded steering angles are zeros. Therefore, preprocessing images and respective steering angles are necessary in order to generalize the training model for unseen tracks such as our validation track.
 
+### Data Preprocessing
+
+- We apply random shear operation. However, we select images with 0.9 probability for the random shearing process. 
+
+- To help the system avoid learning other part of the image but only the track, user crops out the sky and car deck parts in the image. Original image size (160x320), after cropping 60px on top and 20px on the bottom, new image size is (80x320).
+
+- The next stage of the data processing pipeline is called random flip stage. In this stage we randomly (with 0.5 probability) flip images. The idea behind this operation is left turning bends are more prevalent than right bends in the training track.
+
+- To help running a smaller training model, images are scaled to (64x64) size from cropped size (80x320).
+
+### Network Architecture 
+
+Our convolutional neural network architecture was inspired by NVIDIA's End to End Learning for Self-Driving Cars paper. The main difference between our model and the NVIDIA mode is than we did use MaxPooling layers just after each  Convolutional Layer in order to cut down training time. 
+
+- 1st layer: normalize input image to -0.5 to 0.5 range.
+
+- First phrase: 3 convolution layers are applied with 5x5 filter size but the depth increases at each layer such as 24, 36, 48. Then, 2 convolution layers are applied with 3x3 filter size and 64 depth. To avoid overfitting at convolution layers, Relu activation is applied after every convolution layers.
+
+- Second phrase: data from previous layer are flatten. Then dense to 80, 40, 16, 10 and 1. At each dense layer, 50% Dropout is also applied for the first 3 dense layer to avoid overfitting. With recommend from other students, L2 weight regularization is also applied in every convolution and dense layer to produce a smoother driving performance. After many trial and error, 0.001 produce best peformance for this model.
+
+- For optimizer, Adam optimizer is used. I started with 0.001 training rate but 0.0001 seems to produce a smoother ride. Therefore, I kept 0.0001 learning rate.
+
 
 ### Dependencies
 
