@@ -22,6 +22,19 @@ Training | Validation
 ![training_img](./assets/track_one.gif) | ![validation_img](./assets/track_two.gif)
 
 
+### Dependencies
+
+This project requires **Python 3.5** and the following Python libraries installed:
+
+- [Keras](https://keras.io/)
+- [Pandas](http://pandas.pydata.org/)
+- [OpenCV](http://opencv.org/)
+- [Matplotlib](http://matplotlib.org/) (Optional)
+- [Jupyter](http://jupyter.org/) (Optional)
+- [NumPy](http://www.numpy.org/)
+- [SciPy](https://www.scipy.org/)
+- [TensorFlow](http://tensorflow.org)
+
 ## Getting started
 
 The project includes the following files:
@@ -90,11 +103,8 @@ Our convolutional neural network architecture was inspired by NVIDIA's End to En
 
 - 1st layer: normalize input image to -0.5 to 0.5 range.
 
-- First phrase: 3 convolution layers are applied with 5x5 filter size but the depth increases at each layer such as 24, 36, 48. Then, 2 convolution layers are applied with 3x3 filter size and 64 depth. To avoid overfitting at convolution layers, Relu activation is applied after every convolution layers.
-
-- Second phrase: data from previous layer are flatten. Then dense to 80, 40, 16, 10 and 1. At each dense layer, 50% Dropout is also applied for the first 3 dense layer to avoid overfitting. With recommend from other students, L2 weight regularization is also applied in every convolution and dense layer to produce a smoother driving performance. After many trial and error, 0.001 produce best peformance for this model.
-
 - For optimizer, Adam optimizer is used. I started with 0.001 training rate but 0.0001 seems to produce a smoother ride. Therefore, I kept 0.0001 learning rate.
+
 ```
 ____________________________________________________________________________________________________
 Layer (type)                     Output Shape          Param #     Connected to                     
@@ -156,15 +166,13 @@ Trainable params: 2,116,983
 Non-trainable params: 0
 ```
 
-### Dependencies
+### Training
 
-This project requires **Python 3.5** and the following Python libraries installed:
+Even after cropping and resizing training images (with all augmented images), training dataset was very large and it could not fit into the main memory. Hence, we used `fit_generator` API of the Keras library for training our model.
 
-- [Keras](https://keras.io/)
-- [Pandas](http://pandas.pydata.org/)
-- [OpenCV](http://opencv.org/)
-- [Matplotlib](http://matplotlib.org/) (Optional)
-- [Jupyter](http://jupyter.org/) (Optional)
-- [NumPy](http://www.numpy.org/)
-- [SciPy](https://www.scipy.org/)
-- [TensorFlow](http://tensorflow.org)
+We created two generators namely:
+
+* `train_batch = Dataset().next_batch()`
+* `validation_batch = Dataset().next_batch()` 
+
+Batch size of both `train_batch` and `validation_batch` was 64. We used 20032 images per training epoch. It is to be noted that these images are generated on the fly using the document processing pipeline described above. In addition to that, we used 6400 images (also generated on the fly) for validation. We used `Adam` optimizer with `1e-4` learning rate. Finally, when it comes to the number of training epochs we tried several possibilities such as `5`, `8`, `1`0, `2`5 and `50`. However, `6` works well on both training and validation tracks. 
